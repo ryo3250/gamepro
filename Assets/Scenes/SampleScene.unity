@@ -472,7 +472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8122969712049034412, guid: 67f065e074bd63149903af66cbdd1cad, type: 3}
   enemyCount: 24
-  spawnArea: {x: 35, y: 5, z: 4}
+  spawnArea: {x: 5.5, y: 5, z: 40.5}
 --- !u!1 &1289935443
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,6 +685,38 @@ MonoBehaviour:
       m_Action: Element 3
       m_Flags: 0
     m_Flags: 0
+  - m_Name: Input Action
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: ce83552e-e69d-467d-8b9a-a71b40074e9b
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 343af114-cb13-4d11-b16b-ea68a69157ed
+      m_Path: <Keyboard>/w
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input Action
+      m_Flags: 0
+    m_Flags: 0
+  - m_Name: Input Action
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 6383cec1-5b19-4b54-b11f-aed1c32f4f9c
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 106be4f9-094a-4310-83fd-3b9fced4e6b6
+      m_Path: <Keyboard>/s
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input Action
+      m_Flags: 0
+    m_Flags: 0
 --- !u!4 &1598370030
 Transform:
   m_ObjectHideFlags: 0
@@ -693,8 +725,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598370028}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -1.4515802, y: -1.223, z: -25.825718}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -40, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -703,7 +735,7 @@ Transform:
   - {fileID: 1289935444}
   - {fileID: 330585546}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1748286602
 GameObject:
   m_ObjectHideFlags: 0

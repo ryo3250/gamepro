@@ -17,12 +17,15 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 移動アクションボタン
     /// </summary>
-    [SerializeField] private InputAction[] move_ = new InputAction[4];
+    [SerializeField] private InputAction[] move_ = new InputAction[6];
+    //[SerializeField] private float moveSpeed = 5f;
 
     /// <summary>
     /// 毎フレームの移動角度
     /// </summary>
     private Vector3 moveAngle_;
+
+    private Vector3 moveInputZ_;
 
     /// <summary>
     /// カタパルトオブジェクト
@@ -49,9 +52,14 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        // 角度を加える
+        // 回転処理
         transform.eulerAngles += moveAngle_;
+
+        // 向いている方向に前進/後退
+        Vector3 moveDir = Vector3.right * moveInputZ_.z;
+        transform.Translate(moveDir * 0.1f, Space.Self);
     }
+
 
     /// <summary>
     /// 後更新
@@ -83,11 +91,16 @@ public class Player : MonoBehaviour
         move_[1].performed += ctx => moveAngle_.y = -0.1f;
         move_[2].performed += ctx => moveAngle_.z = 0.1f;
         move_[3].performed += ctx => moveAngle_.z = -0.1f;
+        move_[4].performed += ctx => moveInputZ_.z = 1f;
+        move_[5].performed += ctx => moveInputZ_.z = -1f;
 
         move_[0].canceled += ctx => moveAngle_.y = 0.0f;
         move_[1].canceled += ctx => moveAngle_.y = 0.0f;
         move_[2].canceled += ctx => moveAngle_.z = 0.0f;
         move_[3].canceled += ctx => moveAngle_.z = 0.0f;
+        move_[4].canceled += ctx => moveInputZ_.z = 0f;
+        move_[5].canceled += ctx => moveInputZ_.z = 0f;
+
     }
 
     /// <summary>
