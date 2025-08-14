@@ -1,45 +1,47 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    /// <summary>
-    /// 弾のPrefab
-    /// </summary>
+    // ロックオン距離
+    [SerializeField] private float lockOnRange = 10f;
+
+    // 前方コーン角度
+    [SerializeField] private float lockOnAngle = 45f;
+
+    // 敵レイヤー
+    [SerializeField] private LayerMask enemyLayer;
+
+    //弾のPrefab
     [SerializeField] private GameObject bulletPrefab_;
 
-    /// <summary>
-    /// 発射アクションボタン
-    /// </summary>
+    // 発射アクションボタン
     [SerializeField] private InputAction fire_;
 
-    /// <summary>
-    /// 移動アクションボタン
-    /// </summary>
+    //移動アクションボタン
     [SerializeField] private InputAction[] move_ = new InputAction[6];
-    //[SerializeField] private float moveSpeed = 5f;
 
-    /// <summary>
-    /// 毎フレームの移動角度
-    /// </summary>
+    // ロックオン中の敵のRendererを保持するリスト
+    private List<Renderer> lockedEnemies = new List<Renderer>();
+
+    // ロックオン前の敵の色を保持する辞書（元の色に戻すために使用）
+    private Dictionary<Renderer, Color> originalColors = new Dictionary<Renderer, Color>();
+
+    // 毎フレームの移動角度
     private Vector3 moveAngle_;
 
+    // 毎フレームの移動
     private Vector3 moveInputZ_;
 
-    /// <summary>
-    /// カタパルトオブジェクト
-    /// </summary>
+    // カタパルトオブジェクト
     private GameObject catapult_;
 
-    /// <summary>
-    /// 弾オブジェクト
-    /// </summary>
+    // 弾オブジェクト
     //private Bullet bullet_;
 
-    /// <summary>
-    /// 開始処理
-    /// </summary>
+    // 開始処理
     private void Start()
     {
         SetupInputActions();
@@ -47,9 +49,7 @@ public class Player : MonoBehaviour
         //InstantiateBullet();
     }
 
-    /// <summary>
-    /// 更新
-    /// </summary>
+    // 更新
     private void Update()
     {
         // 回転処理
@@ -58,12 +58,16 @@ public class Player : MonoBehaviour
         // 向いている方向に前進/後退
         Vector3 moveDir = Vector3.right * moveInputZ_.z;
         transform.Translate(moveDir * 0.1f, Space.Self);
+
+        if () 
+        { 
+        
+        }
     }
 
 
-    /// <summary>
-    /// 後更新
-    /// </summary>
+
+    // 後更新
     //private void LateUpdate()
     //{
     //    if (!bullet_)
