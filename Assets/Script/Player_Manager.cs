@@ -7,10 +7,10 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     //弾のPrefab
-    [SerializeField] private GameObject bulletPrefab_;
+    [SerializeField] private GameObject bulletPrefab;
 
-    // 発射アクションボタン
-    [SerializeField] private InputAction fire_;
+    // 弾の速度
+    [SerializeField] private float bulletSpeed = 10f;
 
     //移動アクションボタン
     [SerializeField] private InputAction[] move_ = new InputAction[6];
@@ -50,8 +50,35 @@ public class Player : MonoBehaviour
     {
         SetupInputActions();
         FindCatapult();
+
         lockOnAction.Enable();
         //InstantiateBullet();
+
+        // Zキー押下時
+        lockOnAction.performed += ctx =>
+        {
+            LockOnEnemies();
+        };
+
+        // Zキー離した瞬間
+        lockOnAction.canceled += ctx =>
+        {
+            Debug.Log("Zキー離した！"); // 確認用
+            // ロックオンしている敵に対して処理
+            foreach (Renderer rend in lockedEnemies) 
+            {
+                if (bulletPrefab == null) continue;
+
+                // プレイヤーの前方1ユニットに弾を生成
+                Vector3 spawnPos = transform.position + transform.forward * 1f;
+                GameObject bullet = Instantiate(bulletPrefab, spawnPos, transform.rotation);
+
+                // 弾を前方に少し動かすだけ
+                bullet.AddComponent<SimpleBullet>().speed = 10f;
+            }
+
+            ResetLockOn();
+        };
     }
 
     // 更新
@@ -91,7 +118,7 @@ public class Player : MonoBehaviour
 
             Vector3 dirToEnemy = (enemy.transform.position - transform.position).normalized;
             float angle = Vector3.Angle(transform.right, dirToEnemy);
-            float distance = Vector3.Distance(-transform.position, enemy.transform.position);
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
 
             // 向いている方向・距離条件を満たす敵だけ
             if (angle <= lockOnAngle && distance <= lockOnDistance)
@@ -150,7 +177,6 @@ public class Player : MonoBehaviour
     /// </summary>
     private void SetupInputActions()
     {
-        fire_.Enable();
         //fire_.performed += OnFirePerformed;
 
         for (int i = 0; i < move_.Length; i++)
