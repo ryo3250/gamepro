@@ -717,6 +717,26 @@ MonoBehaviour:
       m_Action: Input Action
       m_Flags: 0
     m_Flags: 0
+  maxLockOnCount: 8
+  lockOnDistance: 20
+  lockOnAngle: 45
+  lockOnAction:
+    m_Name: Lock On
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 9492367f-c4d0-4030-bbcd-57fef7b1dd2c
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 5084ab1c-d58e-4bf0-870e-d113124a6cb2
+      m_Path: <Keyboard>/z
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Lock On
+      m_Flags: 0
+    m_Flags: 0
 --- !u!4 &1598370030
 Transform:
   m_ObjectHideFlags: 0

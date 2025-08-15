@@ -1,19 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    // ロックオン距離
-    [SerializeField] private float lockOnRange = 10f;
-
-    // 前方コーン角度
-    [SerializeField] private float lockOnAngle = 45f;
-
-    // 敵レイヤー
-    [SerializeField] private LayerMask enemyLayer;
-
     //弾のPrefab
     [SerializeField] private GameObject bulletPrefab_;
 
@@ -23,11 +15,23 @@ public class Player : MonoBehaviour
     //移動アクションボタン
     [SerializeField] private InputAction[] move_ = new InputAction[6];
 
-    // ロックオン中の敵のRendererを保持するリスト
-    private List<Renderer> lockedEnemies = new List<Renderer>();
+    // ロックオン最大数
+    [SerializeField] private int maxLockOnCount = 8;
 
-    // ロックオン前の敵の色を保持する辞書（元の色に戻すために使用）
+    // ロックオン距離
+    [SerializeField] private float lockOnDistance = 20f;
+
+    // ロックオン有効角度
+    [SerializeField] private float lockOnAngle = 45f;
+
+    // Zキー用のInputAction
+    [SerializeField] private InputAction lockOnAction;
+
+    // 元の色を保持する辞書
     private Dictionary<Renderer, Color> originalColors = new Dictionary<Renderer, Color>();
+
+    // ロックオン中の敵のRendererを保持
+    private List<Renderer> lockedEnemies = new List<Renderer>();
 
     // 毎フレームの移動角度
     private Vector3 moveAngle_;
@@ -46,6 +50,7 @@ public class Player : MonoBehaviour
     {
         SetupInputActions();
         FindCatapult();
+        lockOnAction.Enable();
         //InstantiateBullet();
     }
 
@@ -59,12 +64,73 @@ public class Player : MonoBehaviour
         Vector3 moveDir = Vector3.right * moveInputZ_.z;
         transform.Translate(moveDir * 0.1f, Space.Self);
 
-        if () 
-        { 
-        
+        if (lockOnAction.ReadValue<float>() > 0)
+        {
+            LockOnEnemies();
+        }
+        else 
+        {
+            ResetLockOn();
         }
     }
 
+    private void LockOnEnemies()
+    {
+        // すでにロックオンしている場合は一旦解除
+        ResetLockOn();
+
+        // シーン内のすべての敵を取得
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        List<(Renderer, float)> candidates = new List<(Renderer, float)>();
+
+        foreach (GameObject enemy in enemies)
+        {
+            Renderer rend = enemy.GetComponent<Renderer>();
+            if (!rend) continue;
+
+            Vector3 dirToEnemy = (enemy.transform.position - transform.position).normalized;
+            float angle = Vector3.Angle(transform.right, dirToEnemy);
+            float distance = Vector3.Distance(-transform.position, enemy.transform.position);
+
+            // 向いている方向・距離条件を満たす敵だけ
+            if (angle <= lockOnAngle && distance <= lockOnDistance)
+            {
+                candidates.Add((rend, distance));
+            }
+        }
+
+        // 距離が近い順にソート
+        candidates.Sort((a, b) => a.Item2.CompareTo(b.Item2));
+
+        // 最大 maxLockOnCount 体までロックオン
+        for (int i = 0; i < Mathf.Min(maxLockOnCount, candidates.Count); i++)
+        {
+            Renderer rend = candidates[i].Item1;
+
+            // 元の色を保存
+            originalColors[rend] = rend.material.color;
+
+            // 赤色に変更
+            rend.material.color = Color.red;
+
+            // ロックオン中リストに追加
+            lockedEnemies.Add(rend);
+        }
+    }
+
+    private void ResetLockOn()
+    {
+        foreach (Renderer rend in lockedEnemies)
+        {
+            if (originalColors.ContainsKey(rend))
+            {
+                rend.material.color = originalColors[rend]; // 元の色に戻す
+            }
+        }
+        lockedEnemies.Clear();
+        originalColors.Clear();
+    }
 
 
     // 後更新
