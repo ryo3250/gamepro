@@ -9,9 +9,6 @@ public class Player : MonoBehaviour
     //弾のPrefab
     [SerializeField] private GameObject bulletPrefab;
 
-    // 弾の速度
-    [SerializeField] private float bulletSpeed = 10f;
-
     //移動アクションボタン
     [SerializeField] private InputAction[] move_ = new InputAction[6];
 
@@ -49,10 +46,8 @@ public class Player : MonoBehaviour
     private void Start()
     {
         SetupInputActions();
-        FindCatapult();
 
         lockOnAction.Enable();
-        //InstantiateBullet();
 
         // Zキー押下時
         lockOnAction.performed += ctx =>
@@ -63,20 +58,15 @@ public class Player : MonoBehaviour
         // Zキー離した瞬間
         lockOnAction.canceled += ctx =>
         {
-            Debug.Log("Zキー離した！"); // 確認用
-            // ロックオンしている敵に対して処理
-            foreach (Renderer rend in lockedEnemies) 
+            Debug.Log("Zキー離した！"); // Zキーイベントが来ているか
+            foreach (Renderer rend in lockedEnemies)
             {
-                if (bulletPrefab == null) continue;
+                Debug.Log("弾を生成: " + rend.name); // ロックオン敵がいるか
+                GameObject bullet = Instantiate(bulletPrefab, transform.position + transform.forward * 1f , Quaternion.identity);
 
-                // プレイヤーの前方1ユニットに弾を生成
-                Vector3 spawnPos = transform.position + transform.forward * 1f;
-                GameObject bullet = Instantiate(bulletPrefab, spawnPos, transform.rotation);
-
-                // 弾を前方に少し動かすだけ
-                bullet.AddComponent<SimpleBullet>().speed = 10f;
+                HomingBullet homing = bullet.AddComponent<HomingBullet>();
+                homing.SetTarget(rend.transform, 10f); // 10は弾の速度
             }
-
             ResetLockOn();
         };
     }
@@ -159,22 +149,7 @@ public class Player : MonoBehaviour
         originalColors.Clear();
     }
 
-
-    // 後更新
-    //private void LateUpdate()
-    //{
-    //    if (!bullet_)
-    //    {
-    //        return;
-    //    }
-
-    //    GameController.instance.CanHitEnemy(bullet_);
-    //}
-
-
-    /// <summary>
-    /// 入力アクションのセットアップ
-    /// </summary>
+    // 入力アクションのセットアップ
     private void SetupInputActions()
     {
         //fire_.performed += OnFirePerformed;
@@ -199,52 +174,5 @@ public class Player : MonoBehaviour
 
     }
 
-    /// <summary>
-    /// 発射ボタンが押されたときの処理
-    /// </summary>
-    /// <param name="ctx"></param>
-    //private void OnFirePerformed(InputAction.CallbackContext ctx)
-    //{
-    //    bullet_.transform.SetParent(null);
-    //    bullet_.Fire(catapult_.transform.forward);
-
-    //    bullet_ = null;
-
-    //    // 次弾を装填する
-    //    LoadBullet();
-    //}
-
-    /// <summary>
-    /// 次弾を装填する
-    /// </summary>
-    //private async void LoadBullet()
-    //{
-    //    // 1秒待つ
-    //    await Awaitable.WaitForSecondsAsync(1f);
-
-    //    // 弾を生成する
-    //    InstantiateBullet();
-    //}
-
-    /// <summary>
-    /// Catapult を探す
-    /// </summary>
-    private void FindCatapult()
-    {
-        // Player の子供から Catapult を探す
-        catapult_ = transform.Find("Catapult")?.gameObject;
-    }
-
-    /// <summary>
-    /// Bullet をインスタンス化する
-    /// </summary>
-    //private void InstantiateBullet()
-    //{
-    //    // Prefab の Bullet を生成してアタッチする
-    //    if (bulletPrefab_ != null)
-    //    {
-    //        bullet_ = Instantiate(bulletPrefab_, catapult_.transform)?.GetComponent<Bullet>();
-    //    }
-    //}
 }
 

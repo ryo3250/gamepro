@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class BulletMover : MonoBehaviour
+public class HomingBullet : MonoBehaviour
 {
-    private Transform target;    // 弾が追尾する敵
-    private float speed = 10f;   // 弾の速度
+    private Transform target; // 弾のターゲット
+    private float speed = 10f;
 
-    // ターゲットとスピードをセットする関数
+    // ターゲットとスピードを設定
     public void SetTarget(Transform targetTransform, float moveSpeed)
     {
         target = targetTransform;
@@ -14,11 +14,7 @@ public class BulletMover : MonoBehaviour
 
     private void Update()
     {
-        if (target == null)
-        {
-            Destroy(gameObject); // ターゲットが消えたら弾も消す
-            return;
-        }
+        if (target == null) return;
 
         // ターゲット方向を計算
         Vector3 dir = (target.position - transform.position).normalized;
@@ -29,10 +25,17 @@ public class BulletMover : MonoBehaviour
         // 弾をターゲット方向に向ける
         transform.forward = dir;
 
-        // ターゲットに近づいたら衝突扱いにして消す
+        // ターゲットに近づいたら衝突扱い
         if (Vector3.Distance(transform.position, target.position) < 0.2f)
         {
-            // ここにダメージ処理などを入れることも可能
+            // 敵に揺れリアクション
+            EnemyReaction reaction = target.GetComponent<EnemyReaction>();
+            if (reaction != null)
+            {
+                reaction.Shake();
+            }
+
+            // ここでダメージ処理なども可能
             Destroy(gameObject);
         }
     }
