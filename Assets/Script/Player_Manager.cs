@@ -158,10 +158,10 @@ public class Player : MonoBehaviour
         {
             move_[i].Enable();
         }
-        move_[0].performed += ctx => moveAngle_.y = 0.1f;
-        move_[1].performed += ctx => moveAngle_.y = -0.1f;
-        move_[2].performed += ctx => moveAngle_.z = 0.1f;
-        move_[3].performed += ctx => moveAngle_.z = -0.1f;
+        move_[0].performed += ctx => moveAngle_.y = 0.3f;
+        move_[1].performed += ctx => moveAngle_.y = -0.3f;
+        move_[2].performed += ctx => moveAngle_.z = 0.2f;
+        move_[3].performed += ctx => moveAngle_.z = -0.2f;
         move_[4].performed += ctx => moveInputZ_.z = 1f;
         move_[5].performed += ctx => moveInputZ_.z = -1f;
 
