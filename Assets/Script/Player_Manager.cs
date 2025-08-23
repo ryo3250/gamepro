@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private Transform bulletSpawnPoint; // Inspector‚Åİ’è
     //’e‚ÌPrefab
     [SerializeField] private GameObject bulletPrefab;
 
@@ -62,7 +63,7 @@ public class Player : MonoBehaviour
             foreach (Renderer rend in lockedEnemies)
             {
                 Debug.Log("’e‚ğ¶¬: " + rend.name); // ƒƒbƒNƒIƒ““G‚ª‚¢‚é‚©
-                GameObject bullet = Instantiate(bulletPrefab, transform.position + transform.forward * 1f , Quaternion.identity);
+                GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
 
                 HomingBullet homing = bullet.AddComponent<HomingBullet>();
                 homing.SetTarget(rend.transform, 10f); // 10‚Í’e‚Ì‘¬“x
